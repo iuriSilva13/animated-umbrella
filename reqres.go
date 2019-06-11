@@ -27,25 +27,33 @@ type respostaUsuarios struct {
 func main() {
 	ReceberNomes := obterNomes("https://reqres.in/api/users?page=4")
 	for _, NomeCompleto := range ReceberNomes {
-		fmt.Printf("o nome completo do usuario é:%s\n", NomeCompleto)
+		fmt.Printf("o nome completo do usuario é:%+v\n", NomeCompleto)
 	}
 }
-func obterNomes(endpoint string) []string {
+func obterNomes(endPoint string) []string {
 	var resultado []string
-
-	resposta, _ := http.Get(endpoint)
+	resposta, _ := http.Get(endPoint)
 	body, _ := ioutil.ReadAll(resposta.Body)
 	var resp respostaUsuarios
 	_ = json.Unmarshal(body, &resp)
 
 	for _, usuario := range resp.Data {
-		endPoint := "https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id)
-		respostaEndpoint, _ := http.Get(endPoint)
-		body2, _ := ioutil.ReadAll(respostaEndpoint.Body)
-		var dadosRecebios dadosData
-		_ = json.Unmarshal(body2, &dadosRecebios)
+		Idusuarios := "https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id)
+		resultado = obterEndpoint(Idusuarios, resp)
+	}
 
-		resultado = append(resultado, usuario.First_name+" "+usuario.Last_name)
+	return resultado
+
+}
+func obterEndpoint(listaNomes string, dadosId respostaUsuarios) []string {
+	var resultado []string
+	respostaEndpoint, _ := http.Get(listaNomes)
+	body2, _ := ioutil.ReadAll(respostaEndpoint.Body)
+	var dadosRecebios dadosData
+	_ = json.Unmarshal(body2, &dadosRecebios)
+
+	for _, usuario2 := range dadosId.Data {
+		resultado = append(resultado, usuario2.First_name+" "+usuario2.Last_name)
 	}
 
 	return resultado
