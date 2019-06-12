@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 type Usuario struct {
@@ -12,6 +13,7 @@ type Usuario struct {
 	First_name string `json:"first_name"`
 	Last_name  string `json:"last_name"`
 	Avatar     string `json:"avatar"`
+	Email      string `json:"email"`
 }
 type respostaUsuario struct {
 	ValoresData Usuario `json:"data"`
@@ -30,11 +32,25 @@ func main() {
 		fmt.Printf("o nome completo do usuario é:%+v\n", RespostaNomeCompleto)
 	}
 }
+
 func obterId(endPoint string) []string {
 	var ListaNomes []string
 
-	resposta, _ := http.Get(endPoint)
-	body, _ := ioutil.ReadAll(resposta.Body)
+	httpClient := &http.Client{Timeout: time.Second * 2}
+	req, _ := http.NewRequest("GET", endPoint, nil)
+	Resposta, err := httpClient.Do(req)
+
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+		return ListaNomes
+	}
+
+	if Resposta.StatusCode >= 400 {
+		fmt.Println("Resposta nao chegou")
+		return ListaNomes
+	}
+
+	body, _ := ioutil.ReadAll(Resposta.Body)
 	var dadosRecebidos respostaUsuarios
 	_ = json.Unmarshal(body, &dadosRecebidos)
 
@@ -47,8 +63,21 @@ func obterId(endPoint string) []string {
 }
 
 func obterNomeCompleto(ListaId string) string {
-	respostaEndpoint, _ := http.Get(ListaId)
-	body2, _ := ioutil.ReadAll(respostaEndpoint.Body)
+	httpClient := &http.Client{Timeout: time.Second * 2}
+	req, _ := http.NewRequest("GET", ListaId, nil)
+	Resposta, err := httpClient.Do(req)
+
+	if err != nil {
+		fmt.Printf("%+v\n", err)
+		return ListaId
+	}
+
+	if Resposta.StatusCode >= 400 {
+		fmt.Println("Resposta nao chegou")
+		return ListaId
+	}
+
+	body2, _ := ioutil.ReadAll(Resposta.Body)
 	var dadosUsuario respostaUsuario
 	_ = json.Unmarshal(body2, &dadosUsuario)
 
