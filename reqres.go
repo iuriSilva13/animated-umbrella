@@ -26,6 +26,8 @@ type respostaUsuarios struct {
 	Data        []Usuario `json:"data"`
 }
 
+var httpClient = &http.Client{Timeout: time.Second * 2}
+
 func main() {
 	dadosRespostaUsuarios := obterId("https://reqres.in/api/users?page=4")
 	for _, RespostaNomeCompleto := range dadosRespostaUsuarios {
@@ -36,7 +38,6 @@ func main() {
 func obterId(endPoint string) []string {
 	var ListaNomes []string
 
-	httpClient := &http.Client{Timeout: time.Second * 2}
 	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
 
@@ -63,7 +64,6 @@ func obterId(endPoint string) []string {
 }
 
 func obterNomeCompleto(ListaId string) string {
-	httpClient := &http.Client{Timeout: time.Second * 2}
 	req, _ := http.NewRequest("GET", ListaId, nil)
 	Resposta, err := httpClient.Do(req)
 
