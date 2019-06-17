@@ -81,9 +81,9 @@ func obterNomeCompleto(ListaId string) string {
 		return ListaId
 	}
 
-	body2, _ := ioutil.ReadAll(Resposta.Body)
+	body, _ := ioutil.ReadAll(Resposta.Body)
 	var resposta reqres_response_user
-	_ = json.Unmarshal(body2, &resposta)
+	_ = json.Unmarshal(body, &resposta)
 
 	return resposta.DadosUsuario.First_name + " " + resposta.DadosUsuario.Last_name
 }
