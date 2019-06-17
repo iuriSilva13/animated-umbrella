@@ -67,18 +67,18 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	return ListaNomes
 }
 
-func obterNomeCompleto(ListaId string) string {
-	req, _ := http.NewRequest("GET", ListaId, nil)
+func obterNomeCompleto(endPoint string) string {
+	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
 		fmt.Printf("%+v\n", err)
-		return ListaId
+		return endPoint
 	}
 
 	if Resposta.StatusCode >= 400 {
 		fmt.Println("Resposta nao chegou")
-		return ListaId
+		return endPoint
 	}
 
 	body, _ := ioutil.ReadAll(Resposta.Body)
