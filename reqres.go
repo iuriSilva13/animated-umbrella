@@ -35,7 +35,7 @@ func main() {
 		return
 	}
 	for _, nomeCompleto := range listaNomes {
-		fmt.Printf("o nome completo do usuario é:%+v\n", nomeCompleto)
+		fmt.Printf("o nome completo do usuario é:%s\n", nomeCompleto)
 	}
 }
 
