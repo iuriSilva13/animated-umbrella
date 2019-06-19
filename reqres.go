@@ -46,12 +46,10 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		fmt.Printf("%+v\n", err)
 		return ListaNomes
 	}
 
 	if Resposta.StatusCode >= 400 {
-		fmt.Println("Resposta nao chegou")
 		return ListaNomes
 	}
 
@@ -61,6 +59,9 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 
 	for _, usuario := range dadosRecebidos.Data {
 		Nome := obterNomeCompleto("https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id))
+		if len(Nome) == 0{
+			return ListaNomes
+		}
 		ListaNomes = append(ListaNomes, Nome)
 	}
 
@@ -68,17 +69,16 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 }
 
 func obterNomeCompleto(endPoint string) string {
+	Nome := ""
 	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		fmt.Printf("%+v\n", err)
-		return endPoint
+		return Nome
 	}
 
 	if Resposta.StatusCode >= 400 {
-		fmt.Println("Resposta nao chegou")
-		return endPoint
+		return Nome
 	}
 
 	body, _ := ioutil.ReadAll(Resposta.Body)
