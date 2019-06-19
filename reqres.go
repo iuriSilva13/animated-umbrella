@@ -57,42 +57,34 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	body, _ := ioutil.ReadAll(Resposta.Body)
 	var dadosRecebidos reqres_response_users
 	_ = json.Unmarshal(body, &dadosRecebidos)
-
-	var BuscaNomes chan string = make(chan string)
-
+	
 	for _, usuario := range dadosRecebidos.Data {
-		go obterNomeCompleto(BuscaNomes, "https://reqres.in/api/users/"+fmt.Sprintf("%+v", usuario.Id))
-	}
-
-	for i := 1; i <= len(dadosRecebidos.Data); i++ {
-		Nome := <-BuscaNomes
-		if len(Nome) > 0 {
-			ListaNomes = append(ListaNomes, Nome)
+		Nome := obterNomeCompleto("https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id))
+		if len(Nome) == 0{
+			return ListaNomes
 		}
+		ListaNomes = append(ListaNomes, Nome)
 	}
 
 	return ListaNomes
 }
 
-func obterNomeCompleto(channelDeResultado chan string, endPoint string) {
-	var Nome string = ""
+func obterNomeCompleto(endPoint string)(string) {
+	respostaErro := ""
 	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		fmt.Println(err)
-		return
+		return respostaErro
 	}
 
 	if Resposta.StatusCode >= 400 {
-		channelDeResultado <- Nome
-		return
+		return respostaErro
 	}
 
 	body2, _ := ioutil.ReadAll(Resposta.Body)
 	var resposta reqres_response_user
 	_ = json.Unmarshal(body2, &resposta)
 
-	Nome = resposta.DadosUsuario.First_name + " " + resposta.DadosUsuario.Last_name
-	channelDeResultado <- Nome
+	return resposta.DadosUsuario.First_name + " " + resposta.DadosUsuario.Last_name
 }
