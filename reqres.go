@@ -45,7 +45,7 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		fmt.Printf("%+v\n", err)
+		fmt.Println(err)
 		return ListaNomes
 	}
 
@@ -80,7 +80,7 @@ func obterNomeCompleto(channelDeResultado chan string, endPoint string) {
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		channelDeResultado <- Nome
+		fmt.Println(err)
 		return
 	}
 
