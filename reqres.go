@@ -56,7 +56,7 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	body, _ := ioutil.ReadAll(Resposta.Body)
 	var dadosRecebidos reqres_response_users
 	_ = json.Unmarshal(body, &dadosRecebidos)
-
+	
 	for _, usuario := range dadosRecebidos.Data {
 		Nome := obterNomeCompleto("https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id))
 		if len(Nome) == 0{
@@ -68,17 +68,17 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	return ListaNomes
 }
 
-func obterNomeCompleto(endPoint string) string {
-	Nome := ""
+func obterNomeCompleto(endPoint string)(string) {
+	respostaErro := ""
 	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		return Nome
+		return respostaErro
 	}
 
 	if Resposta.StatusCode >= 400 {
-		return Nome
+		return respostaErro
 	}
 
 	body, _ := ioutil.ReadAll(Resposta.Body)
