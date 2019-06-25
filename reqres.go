@@ -69,7 +69,7 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 }
 
 func obterNomeCompleto(endPoint string)(string) {
-	respostaErro := ""
+	var respostaErro string
 	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
 
