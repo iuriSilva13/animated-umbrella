@@ -40,32 +40,32 @@ func main() {
 }
 
 func consultarNomesNoServidorRemoto(endPoint string) []string {
-	var ListaNomes []string
+	var listaNomes []string
 
 	req, _ := http.NewRequest("GET", endPoint, nil)
-	Resposta, err := httpClient.Do(req)
+	resposta, err := httpClient.Do(req)
 
 	if err != nil {
-		return ListaNomes
+		return listaNomes
 	}
 
-	if Resposta.StatusCode >= 400 {
-		return ListaNomes
+	if resposta.StatusCode >= 400 {
+		return listaNomes
 	}
 
-	body, _ := ioutil.ReadAll(Resposta.Body)
+	body, _ := ioutil.ReadAll(resposta.Body)
 	var dadosRecebidos reqres_response_users
 	_ = json.Unmarshal(body, &dadosRecebidos)
 	
 	for _, usuario := range dadosRecebidos.Data {
-		Nome := obterNomeCompleto("https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id))
-		if len(Nome) == 0{
-			return ListaNomes
+		nome := obterNomeCompleto("https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id))
+		if len(nome) == 0{
+			return listaNomes
 		}
-		ListaNomes = append(ListaNomes, Nome)
+		listaNomes = append(listaNomes, nome)
 	}
 
-	return ListaNomes
+	return listaNomes
 }
 
 func obterNomeCompleto(endPoint string)(string) {
