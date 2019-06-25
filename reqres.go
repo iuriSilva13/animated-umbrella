@@ -59,7 +59,7 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	
 	for _, usuario := range dadosRecebidos.Data {
 		Nome := obterNomeCompleto("https://reqres.in/api/users/" + fmt.Sprintf("%+v", usuario.Id))
-		if len(Nome) == 0{
+		if len(Nome) == 0 {
 			return ListaNomes
 		}
 		ListaNomes = append(ListaNomes, Nome)
@@ -68,7 +68,7 @@ func consultarNomesNoServidorRemoto(endPoint string) []string {
 	return ListaNomes
 }
 
-func obterNomeCompleto(endPoint string)(string) {
+func obterNomeCompleto(endPoint string) string {
 	respostaErro := ""
 	req, _ := http.NewRequest("GET", endPoint, nil)
 	Resposta, err := httpClient.Do(req)
